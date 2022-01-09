@@ -11,6 +11,7 @@ import Home from './pages/home/Home';
 import Profile from './pages/profile/Profile';
 import { AuthContext } from './context/AuthContext.jsx';
 import { useContext } from 'react';
+import Messenger from './pages/messenger/Messenger';
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -27,6 +28,9 @@ const App = () => {
         </Route>
         <Route path='/profile/:username'>
           {user ? <Profile /> : <Redirect to='/login' />}
+        </Route>
+        <Route path='/messenger'>
+          {user ? <Messenger /> : <Redirect to='/login' />}
         </Route>
       </Switch>
     </Router>
