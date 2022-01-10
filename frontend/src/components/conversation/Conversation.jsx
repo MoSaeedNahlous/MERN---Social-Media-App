@@ -1,13 +1,35 @@
+
 import './conversation.css'
-const Conversation = () => {
+import { setState, useEffect} from 'react'
+import axios from 'axios'
+const Conversation = ({ conversation,currentUser }) => {
+    const PUBLIC_PROFILE = process.env.REACT_APP_PUBLIC_FOLDER;
+    const [user, setUser] = setState(null)
+    useEffect(() => {
+        const friendId = conversation.members.find((member) => member !== currentUser)
+        const getUser = async () => {
+            try {
+                const { data } = await axios.get(`/users?userId=${friendId}`)
+                setUser(data)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getUser()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [conversation, currentUser])
     return (
         <div className='conversation'>
             <img
                 className="conversationImg"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfbCra85mqivGKkLeMu00S-X_ah2e6GClAMbWoXuZPRr9IbpdBI-_Wrx0r-89HKDBfoac&usqp=CAU"
-                alt="Hala's img"
+                src={
+                    user.profilePic
+                    ? `${PUBLIC_PROFILE}/${user.profilePic}`
+                    : `${PUBLIC_PROFILE}/default/profile.png`
+                }
+                alt={`${user.username}'s img`}
             />
-            <span className='conversationName'>Hala Haj Kasem</span>
+            <span className='conversationName'>{ user.username }</span>
         </div>
     )
 }
