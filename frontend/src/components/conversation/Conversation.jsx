@@ -5,7 +5,7 @@ import axios from 'axios';
 const Conversation = ({ conversation, currentUserId }) => {
   const PUBLIC_PROFILE = process.env.REACT_APP_PUBLIC_FOLDER;
   const [user, setUser] = useState(null);
-  console.log(conversation.members);
+
   useEffect(() => {
     const friendId = conversation.members.find((m) => m !== currentUserId);
 
