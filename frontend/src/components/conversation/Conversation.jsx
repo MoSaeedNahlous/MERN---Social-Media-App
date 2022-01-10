@@ -1,13 +1,13 @@
-import './conversation.css';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import './conversation.css';
 
-const Conversation = ({ conversation, currentUserId }) => {
-  const PUBLIC_PROFILE = process.env.REACT_APP_PUBLIC_FOLDER;
+export default function Conversation({ conversation, currentUser }) {
   const [user, setUser] = useState(null);
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   useEffect(() => {
-    const friendId = conversation.members.find((m) => m !== currentUserId);
+    const friendId = conversation.members.find((m) => m !== currentUser._id);
 
     const getUser = async () => {
       try {
@@ -18,24 +18,20 @@ const Conversation = ({ conversation, currentUserId }) => {
       }
     };
     getUser();
-  }, [currentUserId, conversation]);
-  if (!user) {
-    return <span>Loading</span>;
-  }
+  }, [currentUser, conversation]);
+
   return (
     <div className='conversation'>
       <img
         className='conversationImg'
         src={
-          user.profilePic
-            ? `${PUBLIC_PROFILE}/${user.profilePic}`
-            : `${PUBLIC_PROFILE}/default/profile.png`
+          user?.profilePic
+            ? PF + '/' + user.profilePic
+            : PF + '/default/noAvatar.png'
         }
-        alt={`${user.username}'s img`}
+        alt=''
       />
-      <span className='conversationName'>{user.username}</span>
+      <span className='conversationName'>{user?.username}</span>
     </div>
   );
-};
-
-export default Conversation;
+}

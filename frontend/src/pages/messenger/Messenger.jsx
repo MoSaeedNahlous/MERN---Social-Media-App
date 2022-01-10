@@ -16,20 +16,37 @@ const Messenger = () => {
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [arrivalMessage, setArrivalMessage] = useState(null);
   const { user } = useContext(AuthContext);
+  const socket = useRef();
   const scrollRef = useRef();
-  const socket = useRef(io('ws://localhost:8900'));
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
+  useEffect(() => {
+    socket.current = io('ws://localhost:8900');
+    socket.current.on('getMessage', (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
     socket.current.emit('addUser', user._id);
-    socket.current.on('getUsers', (users) => {});
+    // socket.current.on("getUsers", (users) => {
+    //   setOnlineUsers(
+    //     user.followings?.filter((f) => users.some((u) => u.userId === f))
+    //   );
+    // });
   }, [user]);
-
-  useEffect(() => {
-    socket?.on('welcome event', (message) => {
-      console.log(message);
-    });
-  }, [socket]);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -40,29 +57,25 @@ const Messenger = () => {
         console.log(error);
       }
     };
-    if (user._id) {
-      getConversations();
-    }
+    getConversations();
   }, [user._id]);
 
   useEffect(() => {
-    const getMessages = async (currentChatId) => {
+    const getMessages = async () => {
       try {
-        const { data } = await axios.get(`/messages/${currentChatId}`);
+        const { data } = await axios.get(`/messages/${currentChat?._id}`);
         setMessages(data);
       } catch (err) {
         console.log(err);
       }
     };
     if (currentChat) {
-      getMessages(currentChat._id);
+      getMessages();
     }
   }, [currentChat]);
 
   useEffect(() => {
-    scrollRef.current?.scrollintoView({
-      behavior: 'smooth',
-    });
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const onClickHandler = async (e) => {
@@ -72,13 +85,24 @@ const Messenger = () => {
       sender: user._id,
       text: newMessage,
     };
+
+    const receiverId = currentChat.members.find(
+      (member) => member !== user._id
+    );
+
+    socket.current.emit('sendMessage', {
+      senderId: user._id,
+      receiverId,
+      text: newMessage,
+    });
+
     try {
       const { data } = await axios.post('/messages', body);
       setMessages([...messages, data]);
+      setNewMessage('');
     } catch (error) {
       console.log(error);
     }
-    setNewMessage('');
   };
 
   return (
@@ -90,7 +114,7 @@ const Messenger = () => {
             <input placeholder='Search for friends' className='chatMenuInput' />
             {conversations.map((conv) => (
               <div key={conv._id} onClick={() => setCurrentChat(conv)}>
-                <Conversation conversation={conv} currentUserId={user._id} />
+                <Conversation conversation={conv} currentUser={user} />
               </div>
             ))}
           </div>
@@ -102,13 +126,9 @@ const Messenger = () => {
             ) : (
               <>
                 <div className='chatBoxTop'>
-                  {messages.map((msg) => (
-                    <div ref={scrollRef}>
-                      <Message
-                        msg={msg}
-                        key={msg._id}
-                        own={msg.sender === user._id ? true : false}
-                      />
+                  {messages.map((m) => (
+                    <div ref={scrollRef} key={m._id}>
+                      <Message msg={m} own={m.sender === user._id} />
                     </div>
                   ))}
                 </div>
@@ -132,11 +152,9 @@ const Messenger = () => {
         </div>
         <div className='chatOnline'>
           <div className='chatOnlineWrapper'>
-            <ChatOnline />
-            <ChatOnline />
-            <ChatOnline />
-            <ChatOnline />
-            <ChatOnline />
+            {/* { onlineFriends.map((friend) => {
+              
+            })} */}
           </div>
         </div>
       </div>

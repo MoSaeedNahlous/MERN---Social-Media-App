@@ -18,24 +18,22 @@ const Message = ({ own, msg }) => {
     };
     getUser();
   }, [senderId]);
-  if (!user) {
-    return <span>Loading</span>;
-  }
+
   return (
     <div className={own ? 'message own' : 'message'}>
       <div className='messageTop'>
         <img
           className='messageImg'
           src={
-            user.profilePic
-              ? `${PUBLIC_PROFILE}/${user.profilePic}`
+            user?.profilePic
+              ? `${PUBLIC_PROFILE}/${user?.profilePic}`
               : `${PUBLIC_PROFILE}/default/profile.png`
           }
-          alt={`${user.username}'s img`}
+          alt={`${user?.username}'s img`}
         />
-        <p className='messageText'>{msg.text}</p>
+        <p className='messageText'>{msg?.text}</p>
       </div>
-      <div className='messageBottom'>{format(msg.createdAt)}</div>
+      <div className='messageBottom'>{format(msg?.createdAt)}</div>
     </div>
   );
 };
