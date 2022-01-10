@@ -1,20 +1,43 @@
-import './message.css'
-const Message = ({own}) => {
-    return (
-        <div className={own?'message own':'message'}>
-            <div className="messageTop">
-                <img
-                className="messageImg"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfbCra85mqivGKkLeMu00S-X_ah2e6GClAMbWoXuZPRr9IbpdBI-_Wrx0r-89HKDBfoac&usqp=CAU"
-                alt="Hala's img"
-                />
-                <p className='messageText'>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
-            </div>
-            <div className="messageBottom">1 hour ago</div>
-        </div>
-    )
-}
+import './message.css';
+import { format } from 'timeago.js';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+const Message = ({ own, msg }) => {
+  const PUBLIC_PROFILE = process.env.REACT_APP_PUBLIC_FOLDER;
+  const [user, setUser] = useState(null);
+  const senderId = msg.sender;
 
-export default Message
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { data } = await axios.get(`/users?userId=${senderId}`);
+        setUser(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUser();
+  }, [senderId]);
+  if (!user) {
+    return <span>Loading</span>;
+  }
+  return (
+    <div className={own ? 'message own' : 'message'}>
+      <div className='messageTop'>
+        <img
+          className='messageImg'
+          src={
+            user.profilePic
+              ? `${PUBLIC_PROFILE}/${user.profilePic}`
+              : `${PUBLIC_PROFILE}/default/profile.png`
+          }
+          alt={`${user.username}'s img`}
+        />
+        <p className='messageText'>{msg.text}</p>
+      </div>
+      <div className='messageBottom'>{format(msg.createdAt)}</div>
+    </div>
+  );
+};
+
+export default Message;
