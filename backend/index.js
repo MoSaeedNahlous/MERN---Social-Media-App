@@ -7,6 +7,8 @@ const multer = require('multer');
 const userRouter = require('./routes/userRoutes');
 const authRouter = require('./routes/authRoutes');
 const postRouter = require('./routes/postRoutes');
+const conversationRouter = require('./routes/conversationRoutes');
+const messageRouter = require('./routes/messageRoutes');
 const path = require('path');
 
 dotenv.config();
@@ -42,6 +44,8 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/posts', postRouter);
+app.use('/api/conversations', conversationRouter)
+app.use('/api/messages',messageRouter)
 
 app.listen(8800, () => {
   console.log('Server is Running on port 8800!');
