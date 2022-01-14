@@ -1,8 +1,7 @@
 const router = require('express').Router();
-const Conversation = require('../models/Conversation')
 const { protect } = require('../middlewares/authMiddleware')
 const asyncHandler = require('express-async-handler');
-const { createConversation, getConversation } = require('../controllers/conversationsRoutes');
+const { createConversation, getConversation } = require('../controllers/conversationsControllers');
 
 //new conversation
 router.post("/",protect,asyncHandler(createConversation))
