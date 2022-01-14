@@ -9,7 +9,7 @@ router.put('/',protect,asyncHandler(updateUser));
 router.delete('/', protect, asyncHandler(deleteUser));
 
 //Get a User
-router.get('/',protect,asyncHandler(getUser) );
+router.get('/',protect,asyncHandler(getUser));
 
 //get friends list
 router.get('/:id/friends',protect,asyncHandler(getUserFriends));
@@ -18,6 +18,6 @@ router.get('/:id/friends',protect,asyncHandler(getUserFriends));
 router.put('/:id/follow', protect,asyncHandler(followUser));
 
 //unfollow a user
-router.put('/:id/unfollow',protect,asyncHandler(unfollowUser) );
+router.put('/:id/unfollow',protect,asyncHandler(unfollowUser));
 
 module.exports = router;
