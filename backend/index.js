@@ -10,6 +10,7 @@ const postRouter = require('./routes/postRoutes');
 const conversationRouter = require('./routes/conversationRoutes');
 const messageRouter = require('./routes/messageRoutes');
 const path = require('path');
+const errorHandlers = require('./middlewares/errorHandlingMiddleware')
 
 dotenv.config();
 const app = express();
@@ -41,11 +42,16 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
   }
 });
 
+
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/conversations', conversationRouter)
-app.use('/api/messages',messageRouter)
+app.use('/api/messages', messageRouter)
+
+
+app.use(errorHandlers.notFound)
+app.use(errorHandlers.errorHandler)
 
 app.listen(8800, () => {
   console.log('Server is Running on port 8800!');

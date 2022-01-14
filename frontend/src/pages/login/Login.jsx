@@ -3,12 +3,14 @@ import './login.css';
 import { loginCall } from '../../apiCalls';
 import { AuthContext } from '../../context/AuthContext';
 import { CircularProgress } from '@material-ui/core';
+import {useHistory} from 'react-router-dom'
 
 const Login = () => {
   const { user, isLoading, error, dispatch } = useContext(AuthContext);
 
   const email = useRef();
   const password = useRef();
+  const history = useHistory()
   const onSubmitHandler = (e) => {
     e.preventDefault();
     loginCall(
@@ -49,19 +51,24 @@ const Login = () => {
                 <CircularProgress
                   size='25px'
                   thickness={6}
-                  color={'secondary'}
+                  color={'white'}
                 />
               ) : (
                 'Log In'
               )}
             </button>
             <span className='loginForgot'>Forgot Your Password?</span>
-            <button className='loginRegisterButton' disabled={isLoading}>
+            <button
+              className='loginRegisterButton'
+              type='button'
+              disabled={ isLoading }
+              onClick={ () => history.push('/register') }
+            >
               {isLoading ? (
                 <CircularProgress
                   size='25px'
                   thickness={6}
-                  color={'secondary'}
+                  color={'white'}
                 />
               ) : (
                 'Create a New Account'

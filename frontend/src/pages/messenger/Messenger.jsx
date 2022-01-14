@@ -41,11 +41,15 @@ const Messenger = () => {
 
   useEffect(() => {
     socket.current.emit('addUser', user._id);
-    // socket.current.on("getUsers", (users) => {
-    //   setOnlineUsers(
-    //     user.followings?.filter((f) => users.some((u) => u.userId === f))
-    //   );
-    // });
+    socket.current.on('getUsers', (users) => {
+      if (user.followings) {
+        setOnlineUsers(
+        user.followings.filter((friend) =>
+          users.some((u) => u.userId === friend)
+        )
+      );
+      }
+    });
   }, [user]);
 
   useEffect(() => {
@@ -92,7 +96,7 @@ const Messenger = () => {
 
     socket.current.emit('sendMessage', {
       senderId: user._id,
-      receiverId,
+      receiverId: receiverId,
       text: newMessage,
     });
 
@@ -137,6 +141,7 @@ const Messenger = () => {
                     onChange={(e) => setNewMessage(e.target.value)}
                     className='chatMessageInput'
                     placeholder='Message'
+                    value={newMessage}
                     name=''
                     id=''
                     cols='30'
@@ -152,9 +157,11 @@ const Messenger = () => {
         </div>
         <div className='chatOnline'>
           <div className='chatOnlineWrapper'>
-            {/* { onlineFriends.map((friend) => {
-              
-            })} */}
+              <ChatOnline
+                onlineUsers1={onlineUsers}
+                currentId={user._id}
+                setCurrentChat={setCurrentChat}
+              />       
           </div>
         </div>
       </div>

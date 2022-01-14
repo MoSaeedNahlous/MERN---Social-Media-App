@@ -11,7 +11,7 @@ export default function Conversation({ conversation, currentUser }) {
 
     const getUser = async () => {
       try {
-        const res = await axios('/users?userId=' + friendId);
+        const res = await axios.get('/users?userId=' + friendId);
         setUser(res.data);
       } catch (err) {
         console.log(err);
@@ -27,7 +27,7 @@ export default function Conversation({ conversation, currentUser }) {
         src={
           user?.profilePic
             ? PF + '/' + user.profilePic
-            : PF + '/default/noAvatar.png'
+            : PF + '/default/profile.png'
         }
         alt=''
       />

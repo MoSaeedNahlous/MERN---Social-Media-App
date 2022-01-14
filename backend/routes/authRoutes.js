@@ -1,50 +1,16 @@
 const router = require('express').Router();
-const User = require('../models/User')
-var bcrypt = require('bcryptjs');
+const { register, login, getCurrentUesr } = require('../controllers/authControllers');
+const { protect } = require('../middlewares/authMiddleware');
+const asyncHandler  = require('express-async-handler')
 
 //Register
-router.post('/register',async(req,res)=> {
-    try {
-        var salt = await bcrypt.genSalt(15);
-        var hashedPassword = await bcrypt.hash(req.body.password, salt);
-        const user = new User({
-            username: req.body.username,
-            email:req.body.email,
-            password:hashedPassword,
-        })
-        const savedUser = await user.save()
-        res.status(200).json(savedUser)
-    } catch (error) {
-        res.status(400).json(error)
-    }
-})
+router.post('/register',asyncHandler(register))
 
-//login
-router.post('/login',async(req,res)=> {
-    try {
-        const userExists = await User.findOne({ email: req.body.email })
+//Login
+router.post('/login',asyncHandler(login))
 
-        if (!userExists) {
-            res.status(400).json("Wrong email or password!")
-            return
-        }
-        
-        const validPassword = await bcrypt.compare(req.body.password, userExists.password)
-        
-        if (!validPassword) {
-            res.status(400).json("Wrong email or password!") 
-            return
-        }
-
-        res.status(200).json(userExists)
-        
-    } catch (error) {
-        res.status(400).json(error)
-    }
-})
-
-
-
+//Load user
+router.get('/load',protect,asyncHandler(getCurrentUesr))
 
 
 module.exports = router
