@@ -1,32 +1,13 @@
 const router = require('express').Router();
 const Conversation = require('../models/Conversation')
+const { protect } = require('../middlewares/authMiddleware')
+const asyncHandler = require('express-async-handler');
+const { createConversation, getConversation } = require('../controllers/conversationsRoutes');
 
 //new conversation
-router.post("/", async (req, res) => {
-    const newConversation = new Conversation({
-        members: [
-            req.body.senderId,
-            req.body.receiverId
-        ]
-    })
-    try {
-        const savedConversation = await newConversation.save()
-        res.status(200).json(savedConversation)
-    } catch (error) {
-        res.status(500).json(error)
-    }
-})
+router.post("/",protect,asyncHandler(createConversation))
 
 //get conversation
-router.get('/:userId', async (req, res) => {
-    try {
-        const conversation = await Conversation.find({
-            members:{$in:[req.params.userId]}
-        })
-        res.status(200).json(conversation)
-    } catch (error) {
-        res.status(500).json(error)
-    }
-})
+router.get('/',protect,asyncHandler(getConversation))
 
 module.exports = router
