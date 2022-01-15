@@ -6,7 +6,7 @@ import { CircularProgress } from '@material-ui/core';
 import {useHistory} from 'react-router-dom'
 
 const Login = () => {
-  const { user, isLoading, error, dispatch } = useContext(AuthContext);
+  const {isLoading,dispatch } = useContext(AuthContext);
 
   const email = useRef();
   const password = useRef();
@@ -17,8 +17,6 @@ const Login = () => {
       { email: email.current.value, password: password.current.value },
       dispatch
     );
-    console.log(user);
-    console.log(error);
   };
 
   return (

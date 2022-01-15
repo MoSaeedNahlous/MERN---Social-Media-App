@@ -1,8 +1,7 @@
 const router = require('express').Router();
 const { addMessage, getMessages } = require('../controllers/messageControllers');
-const Message = require('../models/Message')
 const asyncHandler = require('express-async-handler')
-const { protect} = require('../middlewares/authMiddleware')
+const {protect} = require('../middlewares/authMiddleware')
 
 //add
 router.post('/',protect,asyncHandler(addMessage) )

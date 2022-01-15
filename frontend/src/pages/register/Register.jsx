@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { useRef } from 'react';
 import { useHistory } from 'react-router';
+import GoogleIcon from '@mui/icons-material/Google';
 import './register.css';
 
 const Register = () => {
@@ -73,7 +74,12 @@ const Register = () => {
             <button type='submit' className='loginButton'>
               Sign Up
             </button>
-            <button className='loginRegisterButton'>Log into Account</button>
+            <div className="or-wrapper">
+              <span className='or'> OR </span>
+            </div>
+            
+            <button className='loginButton google' type='button'> Signup with Google <GoogleIcon className='googleIcon' /> </button>
+            <button className='loginRegisterButton' type='button' onClick={()=>{history.push('/login')}}>Log into Account</button>
           </form>
         </div>
       </div>

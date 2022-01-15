@@ -9,7 +9,7 @@
 
 .loginWrapper{
     width: 70%;
-    height: 70%;
+    height: 80vh;
     display: flex;
 }
 
@@ -32,7 +32,7 @@
 }
 
 .loginBox{
-    height: 400px;
+    height: 100%;
     padding: 20px;
     background-color: white;
     border-radius:10px;
@@ -83,4 +83,35 @@
     font-size:20px;
     font-weight: 500;
     cursor: pointer;
+}
+.or-wrapper{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.or{
+    color: grey;
+    font-weight: 400;
+    position: relative;
+
+}
+.or::before,
+.or::after{
+    content: '';
+    width: 100px;
+    height: 2px;
+    display: inline-block;
+    border-top: 1px solid grey;
+    margin-bottom: 3px;
+}
+.google{
+    background-color: #DB4437;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+.googleIcon{
+    margin-left: 5px;
 }
