@@ -12,6 +12,11 @@ const Register = () => {
   const passwordAgain = useRef();
   const history = useHistory();
 
+  const loginHandler = () => {
+    window.open('http://localhost:8800/api/auth/google', '_self');
+  }
+    
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     if (password.current.value !== passwordAgain.current.value) {
@@ -74,12 +79,27 @@ const Register = () => {
             <button type='submit' className='loginButton'>
               Sign Up
             </button>
-            <div className="or-wrapper">
+            <div className='or-wrapper'>
               <span className='or'> OR </span>
             </div>
-            
-            <button className='loginButton google' type='button'> Signup with Google <GoogleIcon className='googleIcon' /> </button>
-            <button className='loginRegisterButton' type='button' onClick={()=>{history.push('/login')}}>Log into Account</button>
+
+            <button
+              className='loginButton google'
+              type='button'
+              onClick={loginHandler}
+            >
+              {' '}
+              Signup with Google <GoogleIcon className='googleIcon' />{' '}
+            </button>
+            <button
+              className='loginRegisterButton'
+              type='button'
+              onClick={() => {
+                history.push('/login');
+              }}
+            >
+              Log into Account
+            </button>
           </form>
         </div>
       </div>

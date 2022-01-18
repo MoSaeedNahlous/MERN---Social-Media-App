@@ -18,6 +18,16 @@ const AuthReducer = (state, action) => {
         isLoading: false,
         error: action.payload,
       };
+    case 'SIGNUP_SUCCESS':
+      return {...state,
+        isLoading: false,
+        error: false,
+      };
+    case 'SIGNUP_FAIL':
+      return {...state,
+        isLoading: false,
+        error: action.payload,
+      };
     case 'FOLLOW':
       return {
         ...state,

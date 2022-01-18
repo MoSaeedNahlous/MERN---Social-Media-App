@@ -12,6 +12,7 @@ import Profile from './pages/profile/Profile';
 import { AuthContext } from './context/AuthContext.jsx';
 import { useContext } from 'react';
 import Messenger from './pages/messenger/Messenger';
+import RegisterContinue from './pages/registerContinue/RegisterContinue';
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -21,7 +22,12 @@ const App = () => {
         <Route exact path='/'>
           {user ? <Home /> : <Login />}
         </Route>
-        <Route path='/login'>{user ? <Redirect to='/' /> : <Login />}</Route>
+        <Route path='/login'>
+          { user ? <Redirect to='/' /> : <Login /> }
+        </Route>
+        <Route path='/register/continue'>
+          {user ? <Redirect to='/' /> : <RegisterContinue />}
+        </Route>
         <Route path='/register'>
           {user ? <Redirect to='/' /> : <Register />}
         </Route>
